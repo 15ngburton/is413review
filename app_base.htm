@@ -1,0 +1,36 @@
+<%inherit file = "/homepage/templates/app_base.htm" />
+<%! from catalog import models as cmod %>
+<%block name="content">
+  <div class = "row">
+    <div class = "col-xs-2">
+      <h1>${ category }</h1>
+      <ul id="catalog"></ul>
+      <ul class = "cat_list">
+        %if category == "All Products":
+          <li><a href = "/catalog/index/0" class = "selected_link">All Products</a></li>
+        %else:
+          <li><a href = "/catalog/index/0">All Products</a></li>
+        %endif
+
+        %for c in cmod.Category.objects.all():
+          %if c.name == category:
+            <li><a href = "/catalog/index/${ c.id }" class = "selected_link">${ c.name }</a></li>
+          %else:
+            <li><a href = "/catalog/index/${ c.id }">${ c.name }</a></li>
+          %endif
+        %endfor
+      </ul>
+    </div>
+    <%block name = "catContent">
+    </%block>
+    <div class = "col-xs-2">
+      <ol class = "recentViewList">
+        %if request.last_five is not Undefined:
+          %for v in request.last_five:
+            <a href = "/catalog/productpage/${ v.id }"<li class = "recentItem"><img src = "${ STATIC_URL + v.image_url()}" class = "viewedImg"/><p>${v.name}</p></li></a>
+          %endfor
+        %endif
+      </ol>
+    </div>
+  </div>
+</%block>
