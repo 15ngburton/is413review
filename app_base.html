@@ -1,0 +1,33 @@
+<%inherit file="/homepage/templates/base.htm" />
+<%! from manager import models as mmod %>
+
+ <%block name="menu">
+
+        <li class="${ 'active' if request.dmp.page == 'index' else '' }"><a href="/homepage/index/">Home</a></li>
+
+ </%block>
+
+<%block name="content_left">
+    <h3>Categories</h3>
+    <ul id="categorylist">
+        <li class="category ${ 'on' if name == 'All Products' else 'off'}"><a href="/catalog/index/">All Products</a></li>
+        %for cat in mmod.Category.objects.order_by("name"):
+        <li class="category ${ 'on' if cat.name == name else 'off'}"><a href="/catalog/index/${cat.id}">${ cat.name }</a></li>
+        %endfor
+    </ul>
+</%block>
+
+<%block name="content_right">
+    <h3 style="text-align:center">Recently Viewed</h3>
+    <ol id= "recent">
+        %for item in request.last_five[1:6]:
+        <li><a href="/catalog/details/${item.id}">
+            <div class="image"><img src="${ item.image_url()}" class="img-responsive"/></div>
+            <div class="name">${ item.name }</div>
+            </a>
+        </li>
+        %endfor
+    </ol>
+
+</%block>
+
